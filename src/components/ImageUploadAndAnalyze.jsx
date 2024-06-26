@@ -21,14 +21,19 @@ const ImageUploadAndAnalyze = () => {
   const analyzeImage = async (file) => {
     const formData = new FormData();
     formData.append('image', file);
-
+    setResult('Please wait for response ...');
     try {
-      const response = await axios.post('YOUR_BACKEND_ENDPOINT', formData, {
+      const response = await axios.post('http://localhost:3001/ocrllm', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
-      setResult(response.data);
+    const parsedData = JSON.parse(response.data);
+    const formattedJsonString = JSON.stringify(parsedData, null, 2);
+
+    //setFormattedData(formattedJsonString);
+    // 设置结果
+    setResult( formattedJsonString);
     } catch (error) {
       console.error('Error uploading image:', error);
       setResult('Error analyzing image');
